@@ -1,3 +1,6 @@
 .DS_Store
 __pycache__/
 *.pyc
+
+# manim 渲染中间文件
+人工智能科普/*/media/
