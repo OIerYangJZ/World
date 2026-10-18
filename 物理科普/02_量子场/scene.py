@@ -906,7 +906,7 @@ class Video(Explainer):
                   (GrowArrow(fa), GrowArrow(fb), FadeOut(lin), FadeIn(fbg), Write(ff)),
                   Tween(d, 0.98, run_time=2.0, rate_func=smooth))
         t1 = T("1948 · 卡西米尔 预言", 26, C_GOLD).move_to([-4.0, 2.88, 0])
-        t2 = T("1997 · 拉莫罗 测得，相符约 5%", 26, C_GOLD).move_to([4.1, 2.88, 0])
+        t2 = T("1997 · 拉莫罗测得（误差约 5%）", 26, C_GOLD).move_to([4.1, 2.88, 0])
         self.beat("1948年卡西米尔预言，1997年拉莫罗测得，与理论吻合，误差约5%。",
                   (FadeOut(lol), FadeOut(lor)),
                   (FadeIn(t1, shift=DOWN * 0.2), FadeIn(t2, shift=DOWN * 0.2)))
