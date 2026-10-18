@@ -26,6 +26,7 @@ EPISODES = {
     "02_神经网络": "神经网络",
     "03_梯度下降": "梯度下降",
     "04_反向传播": "反向传播",
+    "05_词向量": "词向量",
 }
 
 MANIM = os.path.join(os.path.dirname(sys.executable), "manim")

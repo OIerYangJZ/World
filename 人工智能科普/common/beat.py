@@ -106,6 +106,7 @@ def sung_text(sub):
     s = re.sub(r"\d{1,3}(?:,\d{3})+|\d+", lambda m: _int_to_cn(int(m.group(0).replace(",", ""))), s)
     for k, v in ACRONYMS.items():
         s = re.sub(rf"(?<![A-Za-z]){k}(?![A-Za-z])", v, s)
+    s = re.sub(r"([A-Za-z])-(?=[零一二三四五六七八九十])", r"\1 ", s)   # GPT-3 → G P T 三
     s = s.replace("“", "").replace("”", "").replace("《", "").replace("》", "").replace("——", "，")
     return s
 
