@@ -436,6 +436,7 @@ class Video(Explainer):
                             FadeIn(head),
                             LaggedStart(*[FadeIn(VGroup(r, b), shift=RIGHT * 0.2) for r, b in zip(rows, bars)],
                                         lag_ratio=0.5, run_time=2.4)))
+        self.wait(3.5)  # 让精度表（尤其最后一行 MICROSCOPE）停留足够久
         self.clean()
 
     # ================================================================== 第三章
@@ -689,6 +690,7 @@ class Video(Explainer):
                  Succession(FadeIn(head), Write(metric, run_time=1.6),
                             AnimationGroup(GrowFromCenter(b1), FadeIn(l1)),
                             AnimationGroup(GrowFromCenter(b2), FadeIn(l2))))
+        self.wait(3.5)  # 让“时间的弯曲 / 空间的弯曲”两条注释停留足够久
         self.clean()
 
         # 时空图：横轴时间，纵轴高度

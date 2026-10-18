@@ -445,7 +445,7 @@ class Video(Explainer):
         bline = DoubleArrow([bx, Cb[1], 0], [bx, Cb[1] + bc * S, 0], buff=0, color=C_YELLOW, stroke_width=3,
                             tip_length=0.15)
         blab = eq(r"b_c=\tfrac{3\sqrt3}{2}\,r_s\approx 2.6\,r_s", 34, C_YELLOW)
-        blab.add_background_rectangle(color=BG, opacity=0.85, buff=0.08).move_to([-5.2, 2.75, 0])
+        blab.add_background_rectangle(color=BG, opacity=0.85, buff=0.08).move_to([0, 2.75, 0]).to_edge(LEFT, buff=0.6)
         bname = label("瞄准距离 b", 22, C_YELLOW).next_to(bline, RIGHT, buff=0.1)
         bname.add_background_rectangle(color=BG, opacity=0.85, buff=0.05)
         guide = DashedLine([bx, Cb[1] + bc * S, 0], [Cb[0], Cb[1] + bc * S, 0], color=C_YELLOW, stroke_width=1.5, stroke_opacity=0.6)
@@ -640,7 +640,8 @@ class Video(Explainer):
         )
         tl = VGroup(label("纵向：被拉长", 26, C_RED), label("横向：被挤压", 26, C_BLUE)).arrange(DOWN, aligned_edge=LEFT, buff=0.12)
         tl.move_to([3.6, 2.6, 0])
-        self.play(FadeIn(hole), FadeIn(glow), FadeIn(obj), run_time=0.6)
+        exag = label("（示意：形变程度已夸张，不按比例）", 22, C_GREY).move_to([0, -1.9, 0])
+        self.play(FadeIn(hole), FadeIn(glow), FadeIn(obj), FadeIn(exag), run_time=0.6)
         self.say("潮汐力：近端引力更强，物体被纵向拉长、横向挤压。",
                  Succession(dd.animate(run_time=1.0).set_value(5.5),
                             AnimationGroup(LaggedStart(*[GrowArrow(a) for a in arrs], lag_ratio=0.15), FadeIn(tl), run_time=1.3),
@@ -662,7 +663,7 @@ class Video(Explainer):
         hdr2 = label("400 万倍太阳质量", 28, C_GOLD).move_to([3.6, 1.9, 0])
         v1 = VGroup(eq(r"\approx 2\times10^{8}\ \mathrm{m/s^2}", 34), label("约两千万倍重力加速度", 24, C_RED)).arrange(DOWN, buff=0.12).move_to([-3.6, -1.4, 0])
         v2 = VGroup(eq(r"\approx 1\times10^{-3}\ \mathrm{m/s^2}", 34), label("约万分之一倍重力加速度", 24, C_GREEN)).arrange(DOWN, buff=0.12).move_to([3.6, -1.4, 0])
-        cap = label("视界处，2 米长物体两端的加速度差", 22, C_GREY).move_to([0, 2.45, 0])
+        cap = label("视界处，2 米长物体两端的加速度差（物体形变为夸张示意）", 22, C_GREY).move_to([0, 2.45, 0])
         sep = DashedLine([0, 1.8, 0], [0, -2.0, 0], color=C_GREY, stroke_opacity=0.5)
         self.say("黑洞越小，视界处潮汐越强；超大质量黑洞的视界处几乎无感。",
                  Write(f), FadeIn(cap), FadeIn(small), FadeIn(big), FadeIn(hz2l), FadeIn(hdr1), FadeIn(hdr2),

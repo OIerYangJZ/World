@@ -907,7 +907,7 @@ class Video(Explainer):
                   Tween(d, 0.98, run_time=2.0, rate_func=smooth))
         t1 = T("1948 · 卡西米尔 预言", 26, C_GOLD).move_to([-4.0, 2.88, 0])
         t2 = T("1997 · 拉莫罗 测得，相符约 5%", 26, C_GOLD).move_to([4.1, 2.88, 0])
-        self.beat("1948年卡西米尔预言，1997年拉莫罗测得，与理论相符约5%。",
+        self.beat("1948年卡西米尔预言，1997年拉莫罗测得，与理论吻合，误差约5%。",
                   (FadeOut(lol), FadeOut(lor)),
                   (FadeIn(t1, shift=DOWN * 0.2), FadeIn(t2, shift=DOWN * 0.2)))
         for m in (plates, fa, fb):
@@ -996,16 +996,19 @@ class Video(Explainer):
         drv.clear_updaters()
         self.clean()
 
-        # --- 费曼图 + 电子磁矩
-        A = np.array([-3.6, 2.0, 0])
-        B = np.array([-3.6, -0.4, 0])
-        e1 = VGroup(fline([-6.0, 2.9, 0], A), fline(A, [-1.2, 2.9, 0]))
-        e2 = VGroup(fline([-6.0, -1.3, 0], B), fline(B, [-1.2, -1.3, 0]))
-        ph = wavy(A, B, amp=0.13, waves=4)
-        vs = VGroup(Dot(A, radius=0.09), Dot(B, radius=0.09))
-        la = VGroup(eq(r"e^-", 34, C_BLUE).move_to([-6.3, 3.15, 0]), eq(r"e^-", 34, C_BLUE).move_to([-6.3, -1.55, 0]),
-                    eq(r"\gamma", 36, C_YELLOW).move_to([-3.1, 0.8, 0]))
-        vl = T("顶点 ∝ e", 24, C_GREY).next_to(A, RIGHT, buff=0.3)
+        # --- 费曼图 + 电子磁矩：单圈顶点修正图（给出 g/2 的首项修正 α/2π）
+        S_, P1 = np.array([-6.0, -1.3, 0]), np.array([-4.9, -0.35, 0])
+        V_, P2 = np.array([-3.6, 0.8, 0]), np.array([-2.3, -0.35, 0])
+        E_ = np.array([-1.2, -1.3, 0])
+        e1 = VGroup(fline(S_, P1), fline(P1, V_), fline(V_, P2), fline(P2, E_))
+        ext = wavy(V_, [-3.6, 2.85, 0], amp=0.12, waves=4)
+        loop = wavy(P1, P2, amp=0.13, waves=5)
+        vs = VGroup(*[Dot(p, radius=0.09) for p in (P1, V_, P2)])
+        la = VGroup(eq(r"e^-", 34, C_BLUE).move_to([-6.25, -0.95, 0]), eq(r"e^-", 34, C_BLUE).move_to([-0.95, -0.95, 0]),
+                    T("外磁场 γ", 24, C_YELLOW).move_to([-2.65, 2.6, 0]),
+                    T("虚光子（圈）", 22, C_YELLOW).move_to([-3.6, -0.85, 0]))
+        cap = T("单圈“顶点修正”图", 26, C_GREY).move_to([-3.6, 3.4, 0])
+        vl = T("顶点 ∝ e", 24, C_GREY).next_to(V_, RIGHT, buff=0.3)
         tl = VGroup(Arrow([-6.0, -2.15, 0], [-1.2, -2.15, 0], buff=0, color=C_GREY, stroke_width=2),
                     T("时间", 22, C_GREY).move_to([-0.8, -2.15, 0]))
         hd = T("电子磁矩", 32, C_YELLOW).move_to([3.6, 2.7, 0])
@@ -1013,11 +1016,13 @@ class Video(Explainer):
         gs = T("实验值（2023）", 24, C_GREY).move_to([3.6, 1.0, 0])
         qd = T("QED 理论值与之吻合", 30).move_to([3.6, 0.0, 0])
         dv = VGroup(T("相对偏差", 28), eq(r"<10^{-9}", 40, C_TEAL)).arrange(RIGHT, buff=0.2).move_to([3.6, -0.75, 0])
+        sch = VGroup(eq(r"\tfrac{g}{2}=1+\tfrac{\alpha}{2\pi}+\cdots", 38),
+                     T("← 左图贡献首项修正（施温格，1948）", 20, C_GREY)).arrange(DOWN, buff=0.12).move_to([3.6, -1.75, 0])
         self.beat("费曼图是这些过程的记账法；由此算出的电子磁矩与实验吻合到十亿分之一。",
-                  (Create(e1), Create(e2), FadeIn(tl)),
-                  (Create(ph), FadeIn(vs), FadeIn(la), FadeIn(vl)),
+                  (Create(e1), FadeIn(tl), FadeIn(cap)),
+                  (Create(ext), Create(loop), FadeIn(vs), FadeIn(la), FadeIn(vl)),
                   (FadeIn(hd), Write(gv), FadeIn(gs)),
-                  (FadeIn(qd), FadeIn(dv)))
+                  (FadeIn(qd), FadeIn(dv), FadeIn(sch)))
         self.clean()
 
     # ------------------------------------------------------------ 第六章

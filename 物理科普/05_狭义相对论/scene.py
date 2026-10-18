@@ -349,7 +349,8 @@ class Video(Explainer):
         brace = BraceBetweenPoints([xr - 0.75, yt, 0], [xr - 0.75, yb, 0], direction=LEFT, color=C_GREY)
         lL = eq("L", 40).next_to(brace, LEFT, buff=0.12)
         lrest = T("静止的光钟", 26, C_GREY).move_to([xr, yt + 0.45, 0])
-        dtau = eq(r"\Delta\tau = L/c", 40, C_TEAL).move_to([xr, yt + 1.15, 0])
+        dtau = VGroup(eq(r"\Delta\tau = L/c", 40, C_TEAL), T("（单程）", 22, C_TEAL)).arrange(RIGHT, buff=0.1)
+        dtau.move_to([xr + 0.25, yt + 1.15, 0])
 
         x0 = -2.4
         mov = mirrors(x0)
@@ -375,7 +376,7 @@ class Video(Explainer):
                       ).arrange(DOWN, aligned_edge=LEFT, buff=0.35).move_to([4.9, -0.1, 0])
 
         self.add(rest, pr)
-        self.beat("光钟：光子在镜间往返一趟算一次嘀嗒，用时Δτ = L/c。",
+        self.beat("光钟：光子从一面镜子飞到另一面（单程）算一次嘀嗒，用时Δτ = L/c。",
                   [FadeIn(rest), FadeIn(pr), FadeIn(lrest), GrowFromCenter(brace), FadeIn(lL), 0.8],
                   [Tr.animate.set_value(2 * tau), Write(dtau), 2.4])
         trace = TracedPath(pm.get_center, stroke_color=C_YELLOW, stroke_width=3)

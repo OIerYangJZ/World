@@ -533,7 +533,9 @@ class Video(Explainer):
     # ------------------------------------------------------------------ 第三章
     def ch3(self):
         self.chapter("第三章", "电磁波的样子")
-        pr = Proj(origin=(0, 0.55, 0), az=-0.42, el=0.14)
+        # 视角选择：从略低于传播平面处看，z 轴（B 方向）在屏幕上朝右上、与传播轴接近垂直，
+        # 这样 B 的正半周与 E 的正半周落在同一侧、同一位置，一眼可见二者同相。
+        pr = Proj(origin=(0, 0.3, 0), az=0.15, el=-0.30)
         self.clock.set_value(0)
         self.speed = 1.0
         wave = self.plane_wave(pr, amp=1.5, lam=4.0, c=1.0)
@@ -544,10 +546,10 @@ class Video(Explainer):
         self.play(FadeIn(wave), FadeIn(leg), run_time=1.0)
         self.add(clab)
         self.say("这是一列平面电磁波：黄色是电场，蓝色是磁场。",
-                 pr.az.animate.set_value(-0.85), pr.el.animate.set_value(0.42), run_time=4.0,
+                 pr.az.animate.set_value(0.55), pr.el.animate.set_value(-0.85), run_time=4.0,
                  rate_func=smooth)
         # 三轴小坐标架
-        tri = Proj(origin=(-5.0, -1.5, 0), az=-0.6, el=0.32, scale=0.75)
+        tri = Proj(origin=(-5.2, -1.9, 0), az=0.4, el=-0.7, scale=0.75)
         o = tri.pt([0, 0, 0])
         axes = VGroup()
         for v, col, txt in (([1.2, 0, 0], C_WHITE, "c"), ([0, 1.0, 0], E_COL, "E"), ([0, 0, 1.2], B_COL, "B")):
@@ -557,7 +559,7 @@ class Video(Explainer):
             axes.add(ar, lb)
         perp = T("E ⊥ B ⊥ 传播方向", 28).move_to([0, 3.45, 0])
         self.say("电场、磁场、传播方向两两垂直：电磁波是横波。",
-                 pr.az.animate.set_value(-0.6), pr.el.animate.set_value(0.32),
+                 pr.az.animate.set_value(0.4), pr.el.animate.set_value(-0.7),
                  FadeIn(axes), FadeIn(perp), run_time=2.5)
         # 冻结，标出同相
         self.speed = 0.0
@@ -575,7 +577,8 @@ class Video(Explainer):
         d2 = DashedLine(pB, p0, color=C_WHITE, stroke_width=2)
         rings = VGroup(Circle(0.17).move_to(pE).set_stroke(E_COL, 3), Circle(0.17).move_to(pB).set_stroke(B_COL, 3))
         mx = T("同时最大", 24).next_to(pE, UP, buff=0.22)
-        zr = VGroup(Dot(pz, radius=0.09, color=C_WHITE), T("同时为零", 24).next_to(pz, DOWN, buff=0.6).shift(RIGHT * 0.5))
+        zr = VGroup(Dot(pz, radius=0.09, color=C_WHITE), T("同时为零", 24).next_to(pz, DOWN, buff=1.3).shift(RIGHT * 1.2),
+                   Line(pz + DOWN * 0.15 + RIGHT * 0.1, pz + DOWN * 1.15 + RIGHT * 0.9, stroke_width=1.5, color=C_GREY))
         ecb = VGroup(eq(r"E=cB", 54), T("（画面按 c = 1 的单位等长绘制）", 20, C_GREY)).arrange(DOWN, buff=0.15)
         ecb.next_to(leg, DOWN, buff=0.35).align_to(leg, RIGHT)
         self.say("两者同步起伏，同时最大、同时为零；真空中 E = cB。",
@@ -875,7 +878,7 @@ class Video(Explainer):
         self.clear_all()
 
         # 能量：坡印廷矢量
-        pr2 = Proj(origin=(0, 0.35, 0), az=-0.6, el=0.32)
+        pr2 = Proj(origin=(0, 0.1, 0), az=0.4, el=-0.7)
         self.clock.set_value(0)
         w2 = self.plane_wave(pr2, amp=1.4, lam=4.0, c=1.0, x0=-6, x1=5.5)
         Sv = Arrow(pr2.pt([-1.0, 0, 0]), pr2.pt([4.0, 0, 0]), buff=0, color=S_COL, stroke_width=10,
@@ -1025,7 +1028,7 @@ class Video(Explainer):
                             FadeIn(null, scale=1.3, run_time=0.6)))
         self.clear_all()
 
-        pr = Proj(origin=(0, 0.9, 0), az=-0.6, el=0.3, scale=0.95)
+        pr = Proj(origin=(0, 0.6, 0), az=0.4, el=-0.7, scale=0.95)
         self.clock.set_value(0)
         wave = self.plane_wave(pr, amp=1.3, lam=4.0, c=1.0, x0=-6, x1=5.5)
         tg2 = self.tag("1905 · 爱因斯坦 · 狭义相对论")
