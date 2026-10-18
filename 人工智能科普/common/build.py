@@ -23,6 +23,7 @@ import beat  # noqa: E402
 
 EPISODES = {
     "01_机器怎么学": "机器怎么学",
+    "02_神经网络": "神经网络",
 }
 
 MANIM = os.path.join(os.path.dirname(sys.executable), "manim")

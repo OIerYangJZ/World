@@ -9,6 +9,7 @@
 | 集 | 标题 | 曲风 / BPM | 成品视频 | 时长 |
 |---|---|---|---|---|
 | 正片 01 | 机器怎么“学”：一台会自己拧旋钮的函数 | 经典 boom bap / 88 | [`01_机器怎么学/机器怎么学.mp4`](01_机器怎么学/机器怎么学.mp4) | 5:32.7 |
+| 正片 02 | 神经网络：一层一层的小开关 | synthwave 电子说唱 / 96 | [`02_神经网络/神经网络.mp4`](02_神经网络/神经网络.mp4) | 5:25.0 |
 
 ## 每集文件
 
@@ -33,4 +34,4 @@ bash common/setup_env.sh                                       # 首次：cairo/
 ~/.venvs/manim/bin/python common/build.py 01_机器怎么学            # 1080p30 成片
 ```
 
-`common/` 里：`beat.py`（小节网格、校验、导出 CSV / MD / SRT / ASS、演唱稿自动转换）、`style.py`（配色、`BeatScene` 节拍场景基类、旋钮 / 黑箱 / 计数器等公共部件）、`build.py`（一键构建）。
+`common/` 里：`beat.py`（小节网格、校验、导出 CSV / MD / SRT / ASS、演唱稿自动转换）、`style.py`（配色、`BeatScene` 节拍场景基类、旋钮 / 黑箱 / 计数器等公共部件）、`digits.py`（程序生成的手写风格数字，示意 MNIST 输入）、`build.py`（一键构建）。

@@ -38,6 +38,37 @@ config.background_color = "#0b0d14"
 FONT = "Noto Sans CJK SC"
 BG = "#0b0d14"
 
+
+# ---------------------------------------------------------------- 兼容补丁
+# manim 0.19 的 Camera.display_image_mobject 用 Image.fromarray(float 零数组, mode="RGBA")
+# 新建整帧画布，Pillow ≥ 11.3 起不再接受（报 ValueError，随后写帧线程挂起）。
+# 这里换成 Image.new，其余逻辑与原实现一致。只影响 ImageMobject。
+def _display_image_mobject(self, image_mobject, pixel_array):
+    from PIL import Image
+    from scipy.spatial.distance import pdist
+    corner_coords = self.points_to_pixel_coords(image_mobject, image_mobject.points)
+    ul_coords, ur_coords, dl_coords, _ = corner_coords
+    right_vect = ur_coords - ul_coords
+    down_vect = dl_coords - ul_coords
+    center_coords = ul_coords + (right_vect + down_vect) / 2
+    sub_image = Image.fromarray(np.ascontiguousarray(image_mobject.get_pixel_array(), dtype=np.uint8))
+    if sub_image.mode != "RGBA":
+        sub_image = sub_image.convert("RGBA")
+    pixel_width = max(int(pdist([ul_coords, ur_coords]).item()), 1)
+    pixel_height = max(int(pdist([ul_coords, dl_coords]).item()), 1)
+    sub_image = sub_image.resize((pixel_width, pixel_height), resample=image_mobject.resampling_algorithm)
+    adjusted_angle = -int(360 * angle_of_vector(right_vect) / TAU)
+    if adjusted_angle != 0:
+        sub_image = sub_image.rotate(adjusted_angle, resample=image_mobject.resampling_algorithm, expand=1)
+    full_image = Image.new("RGBA", (self.pixel_width, self.pixel_height), (0, 0, 0, 0))
+    new_ul = (center_coords - np.array(sub_image.size) / 2).astype(int)
+    full_image.paste(sub_image, box=(new_ul[0], new_ul[1], new_ul[0] + sub_image.size[0],
+                                     new_ul[1] + sub_image.size[1]))
+    self.overlay_PIL_image(pixel_array, full_image)
+
+
+Camera.display_image_mobject = _display_image_mobject
+
 # 3Blue1Brown 风格配色（与物理科普一致），全系列颜色语义见 规划.md 1.5
 C_BLUE = "#58C4DD"     # 输入 / 数据 / token
 C_TEAL = "#5CD0B3"
@@ -124,6 +155,41 @@ class BeatScene(Scene):
 
     def finish(self):
         self.at_bar(self.total_bars + 1)
+
+    # ------------------------------------------------------------ 常驻 UI（第 02 集起使用；第 01 集在自己的 scene.py 里有同名实现）
+    def set_counter(self, text, bars=0.5):
+        """右上角旋钮计数器：第一次淡入，之后整体变形成新数字"""
+        new = knob_counter(text)
+        if getattr(self, "counter", None) is None:
+            self.counter = new
+            self.play_bars(FadeIn(new, shift=LEFT * 0.2), bars=bars)
+        else:
+            self.play_bars(Transform(self.counter, new), bars=bars)
+
+    def tag(self, text, bars=0.25):
+        """左上角段落提示"""
+        t = section_tag(text)
+        old = getattr(self, "_tag", None)
+        anims = [FadeIn(t, shift=RIGHT * 0.2)]
+        if old is not None and old in self.mobjects:
+            anims.append(FadeOut(old))
+        self._tag = t
+        self.play_bars(*anims, bars=bars)
+
+    def keep(self):
+        return [m for m in (getattr(self, "counter", None), getattr(self, "_tag", None)) if m is not None]
+
+    def visible(self):
+        return [m for m in self.mobjects if not isinstance(m, ValueTracker)]
+
+    def fade_rest(self, bars=0.5, extra_keep=()):
+        """淡出除常驻 UI 以外的全部元素"""
+        keep = self.keep() + list(extra_keep)
+        mobs = [m for m in self.visible() if m not in keep]
+        if mobs:
+            self.play_bars(*[FadeOut(m) for m in mobs], bars=bars)
+        else:
+            self.at_bar(self._pos + bars)
 
     # ------------------------------------------------------------ 结构化元素
     def clear(self, bars=0.5, keep=()):
