@@ -31,6 +31,7 @@ EPISODES = {
     "07_Transformer": "Transformer",
     "08_预训练": "预训练",
     "09_后训练": "后训练",
+    "10_能与不能": "能与不能",
 }
 
 MANIM = os.path.join(os.path.dirname(sys.executable), "manim")
